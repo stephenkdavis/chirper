@@ -1,0 +1,91 @@
+﻿@model Chirper.Models.UserDetailsDto
+
+@{
+    ViewBag.Title = "My Account Profile";
+}
+
+<partial name="_PageTitle" />
+
+<div class="row text-center">
+    <span class="fw-bold fs-3 text-success">@TempData["message"]</span>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle text-center">
+        <tbody>
+            <tr>
+                <th scope="row">
+                    <label asp-for="Username"></label>
+                </th>
+                <td>
+                    @Model.Username
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label asp-for="Email"></label>
+                </th>
+                <td>
+                    @Model.Email
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label asp-for="FirstName"></label>
+                </th>
+                <td>
+                    @Model.FirstName
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label asp-for="LastName"></label>
+                </th>
+                <td>
+                    @Model.LastName
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label asp-for="JoinDate"></label>
+                </th>
+                <td>
+                    @Model.JoinDate.ToLongDateString()
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label asp-for="ChirpCount"></label>
+                </th>
+                <td>
+                    @Model.ChirpCount
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label asp-for="FollowerCount"></label>
+                </th>
+                <td>
+                    @Model.FollowerCount
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label asp-for="LikeCount"></label>
+                </th>
+                <td>
+                    @Model.LikeCount
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-sm-6 text-center">
+        <a class="col-sm-3 mx-auto btn btn-outline-primary btn-sm" asp-controller="Dashboard" asp-action="Modify">Edit Profile</a>
+    </div>
+    <div class="col-sm-6 text-center">
+        <a class="col-sm-3 mx-auto btn btn-danger btn-sm" asp-controller="Account" asp-action="Delete">Delete Account</a>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@model Chirper.Models.ChirpDto
+
+@{
+    ViewBag.Title = "Write A Chirp";
+}
+
+<partial name="_PageTitle" />
+
+<div class="col-sm-6 mx-auto">
+    <div class="row text-center">
+        <form asp-antiforgery="true" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <h4>Chirp Message</h4>
+                <textarea asp-for="ChirpBody" class="form-control form-control-lg"></textarea>
+                <span asp-validation-for="ChirpBody" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <h4>Chirp Tags</h4>
+                <select class="form-select form-select-lg" size=5 multiple asp-for="SelectedTags">
+                    @foreach (var tag in ViewBag.Tags)
+                    {
+                        <option value="@tag.TagId">@tag.TagName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group mt-3">
+                <div class="h-captcha" data-sitekey="@ViewBag.SiteKey"></div>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Post Chirp" class="btn btn-primary" />
+                <input type="reset" value="Clear Form" class="btn btn-danger"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script src="https://js.hcaptcha.com/1/api.js" async></script>
+}

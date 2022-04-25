@@ -1,0 +1,44 @@
+﻿@model Chirper.Models.LogInDto
+
+@{
+    ViewBag.Title = "Account Log In";
+}
+
+<partial name="_PageTitle" />
+
+<div class="row text-center">
+    <span class="fw-bold fs-3 text-success">@TempData["message"]</span>
+</div>
+
+<div class="col-sm-6 mx-auto">
+    <div class="row text-center">
+        <form asp-action="LogIn" asp-controller="Account" asp-antiforgery=true method="post" role="form">
+            <span class="text-success">@ViewBag.ResetMessage</span>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-3">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" type="text" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <div class="h-captcha" data-sitekey="@ViewBag.SiteKey"></div>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Log In" class="btn btn-primary" />
+                <input type="reset" value="Clear Form" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script src="https://js.hcaptcha.com/1/api.js" async></script>
+}

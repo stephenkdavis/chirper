@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Chirper.Models.TagList>
+
+@{
+    ViewBag.Title = "Chirp Tag List";
+}
+
+<partial name="_PageTitle" />
+
+@if (ViewBag.TagCount > 0)
+{
+    <div class="row">
+        <div class="btn-group flex-wrap" data-toggle="buttons">
+            @foreach (var tag in Model)
+            {
+                <a class="btn btn-outline-dark mx-1 my-1 rounded" href="/tag/@tag.TagId">@tag.TagName</a>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <h4>No tags found.</h4>
+    </div>
+}

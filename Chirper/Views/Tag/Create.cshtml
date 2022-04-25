@@ -1,0 +1,35 @@
+﻿@model Chirper.Models.TagList
+
+@{
+    ViewBag.Title = "Create New Tag";
+}
+
+<partial name="_PageTitle" />
+
+<div class="col-sm-6 mx-auto">
+    <div class="row text-center">
+        <form asp-action="Create" asp-controller="Tag" asp-antiforgery=true method="post" role="form">
+            <span class="text-success">@ViewBag.ResetMessage</span>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-3">
+                <label asp-for="TagName" class="control-label"></label>
+                <input asp-for="TagName" class="form-control" type="text" />
+                <span asp-validation-for="TagName" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <div class="h-captcha" data-sitekey="@ViewBag.SiteKey"></div>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Create Tag" class="btn btn-primary" />
+                <input type="reset" value="Clear Form" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script src="https://js.hcaptcha.com/1/api.js" async></script>
+}

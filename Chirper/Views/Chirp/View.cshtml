@@ -1,0 +1,180 @@
+﻿@model Chirper.Models.Comment
+@{
+    ViewBag.Title = "View Chirp";
+    ChirpDto chirp = ViewBag.Chirp;
+    CommentDto[] comments = ViewBag.Comments;
+}
+
+@if (!ViewBag.ValidChirp)
+{
+    <div class="text-center">
+        <h1>@ViewBag.Message</h1>
+        <h2>Please try searching for a chirp.</h2>
+    </div>
+}
+
+@if (ViewBag.ValidChirp)
+{
+    <div class="card border-dark">
+        <div class="body text-center my-1">
+            <div class="row">
+                <div class="col-sm-2 my-auto">
+                    <img src="https://www.gravatar.com/avatar/@chirp.GravatarCode?s=125&d=retro" alt="Gravatar Image" />
+                </div>
+                <div class="col-sm-5">
+                    <div class="row mt-3">
+                        <h3 class="card-title mb-0">@chirp.FirstName @chirp.LastName</h3>
+                        <small class="mt-0"><a class="text-decoration-none" href="/@chirp.Username">&#64;@chirp.Username</a></small>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="row mt-3">
+                        <small class="mb-0">@chirp.ChirpTimestamp.ToLongDateString() at @chirp.ChirpTimestamp.ToShortTimeString()</small>
+                        <small class="mt-0">@chirp.ChirpLikes Likes / @chirp.ChirpDislikes Dislikes</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a id="btnLike" class="col-sm-3 mx-auto btn btn-outline-success btn-sm" style="max-width: 200px;" onclick="rateChirp(1)">Like This Chirp</a>
+                    <a id="btnDislike" class="col-sm-3 mx-auto btn btn-outline-danger btn-sm" style="max-width: 200px;" onclick="rateChirp(-1)">Dislike This Chirp</a>
+                }
+            </div>
+            <div class="row mt-3">
+                <p class="card-text px-5">@chirp.ChirpBody</p>
+            </div>
+            <div class="row mt-3">
+                @if (ViewBag.TagCount > 0)
+                {
+                    <div class="btn-group flex-wrap" data-toggle="buttons">
+                        @foreach (var tag in ViewBag.Tags)
+                        {
+                            <a class="btn btn-outline-dark mx-1 my-1 rounded" href="/tag/@tag.TagId">@tag.TagName</a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center">No Tags Found</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.CommentCount > 0)
+    {
+        foreach (CommentDto comment in comments)
+        {
+            <div class="card mt-1 col-sm-10 mx-auto border-dark">
+                <div class="body text-center my-1">
+                    <div class="row">
+                        <div class="col-sm-2 my-auto">
+                            <img src="https://www.gravatar.com/avatar/@comment.GravatarCode?s=75&d=retro" alt="Gravatar Image" />
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="row mt-3">
+                                <h4 class="card-title mb-0">@comment.FirstName @comment.LastName</h4>
+                                <small class="mt-0"><a class="text-decoration-none" href="/@comment.Username">&#64;@comment.Username</a></small>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="row mt-3">
+                                <small class="mb-0">@comment.CommentTimestamp.ToLongDateString() at @comment.CommentTimestamp.ToShortTimeString()</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <p class="card-text px-5">@comment.CommentBody</p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="card mt-1 col-sm-10 mx-auto border-dark">
+            <div class="body text-center my-1">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row mx-auto my-auto">
+                            <h4 class="card-title mb-0">No Comments Found</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="col-sm-6 mx-auto">
+            <div class="row text-center">
+                <form id="commentForm" novalidate class="needs-validation">
+                    <div class="form-group mt-3">
+                        <label asp-for="CommentBody" class="control-label"></label>
+                        <textarea asp-for="CommentBody" class="form-control" id="txtComment"></textarea>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button id="btnPost" class="btn btn-primary" onclick="postComment()">Post Comment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    <input id="chirpId" hidden="hidden" disabled="disabled" value="@ViewBag.ChirpId" />
+}
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script type="text/javascript">
+    function rateChirp(x) {
+        var data = {
+            chirpId: document.getElementById("chirpId").value,
+            rate: x
+        };
+        let _url = "/Chirp/" + data.chirpId + "/Rate/";
+        document.getElementById("btnLike").disabled = true;
+        document.getElementById("btnDislike").disabled = true;
+        $.ajax({
+            type: 'POST',
+            url: _url,
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            dataType: 'json',
+            success: function (result) {
+                location.reload();
+            },
+            error: function () {
+                alert("An error occured. Please try again later.")
+            }
+        })
+    }
+
+    function postComment() {
+        var data = {
+            chirpId: document.getElementById("chirpId").value,
+            comment: document.getElementById("txtComment").value
+        };
+        let _url = "/Chirp/" + data.chirpId + "/Comment/";
+        document.getElementById("txtComment").disabled = true;
+        document.getElementById("btnPost").disabled = true;
+        $.ajax({
+            type: 'POST',
+            url: _url,
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            dataType: 'json',
+            success: function (result) {
+                location.reload();
+            },
+            error: function () {
+                location.reload();
+            }
+        })
+    }
+</script>
+}

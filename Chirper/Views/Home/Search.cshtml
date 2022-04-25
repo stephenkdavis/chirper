@@ -1,0 +1,142 @@
+﻿@{
+    ViewBag.Title = "Search";
+}
+
+@if (!ViewBag.IsValid)
+{
+    <div class="text-center">
+        <h1>No results found.</h1>
+        <h2>Please try your search again.</h2>
+    </div>
+}
+
+@if (ViewBag.IsValid)
+{
+    <div class="text-center">
+        <div class="row">
+            <h1>Search Results</h1>
+            <h2>Query: @ViewBag.Query</h2>
+        </div>
+        <div class="row">
+            <div class="btn-group" data-toggle="buttons">
+                <a class="btn btn-outline-primary mx-2 my-2 rounded" href="#chirps">Chirp Results</a>
+                <a class="btn btn-outline-primary mx-2 my-2 rounded" href="#tags">Tag Results</a>
+                <a class="btn btn-outline-primary mx-2 my-2 rounded" href="#users">User Results</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5" id="chirps">
+        <div class="row">
+            <h3>Chirps</h3>
+        </div>
+        @if (ViewBag.ChirpCount != 0)
+        {
+            @foreach (var chirp in ViewBag.Chirps)
+            {
+                <div class="row mt-1 mx-auto">
+                    <div class="card border-dark">
+                        <div class="body text-center my-1">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row mt-3">
+                                        <h3 class="card-title mb-0">@chirp.FirstName @chirp.LastName</h3>
+                                        <small class="mt-0"><a class="text-decoration-none" href="/@chirp.Username">&#64;@chirp.Username</a></small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row mt-3">
+                                        <small class="mb-0">@chirp.ChirpTimestamp.ToLongDateString() at @chirp.ChirpTimestamp.ToShortTimeString()</small>
+                                        <small class="mt-0">@chirp.ChirpLikes Likes / @chirp.ChirpDislikes Dislikes</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <p class="card-text px-5">
+                                    <a class="text-dark text-decoration-none" href="/chirp/@chirp.ChirpId">@chirp.ChirpBody</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <h4>No chirps found.</h4>
+            </div>
+        }
+
+        <partial name="_PageTopButton" />
+    </div>
+
+    <div class="row mt-5" id="tags">
+        <div class="row">
+            <h3>Tags</h3>
+        </div>
+        @if (ViewBag.TagCount != 0)
+        {
+            <div class="row">
+                <div class="btn-group flex-wrap" data-toggle="buttons">
+                    @foreach (var tag in ViewBag.Tags)
+                    {
+                        <a class="btn btn-outline-dark mx-1 my-1 rounded" href="/tag/@tag.TagId">@tag.TagName</a>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <h4>No tags found.</h4>
+            </div>
+        }
+
+        <partial name="_PageTopButton" />
+    </div>
+
+    <div class="row mt-5" id="users">
+        <div class="row">
+            <h3>Users</h3>
+        </div>
+        @if (ViewBag.UserCount != 0)
+        {
+            @foreach (var user in ViewBag.Users)
+            {
+                <div class="row mt-1 mx-auto">
+                    <div class="card border-dark">
+                        <div class="body">
+                            <div class="row text-center">
+                                <div class="col-sm-2 my-auto">
+                                    <img src="https://www.gravatar.com/avatar/@user.GravatarCode?s=75&d=retro" alt="Gravatar Image" />
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="row mt-3">
+                                        <h4 class="card-title mb-0"><a class="text-decoration-none" href="/@user.Username">@user.FirstName @user.LastName</a></h4>
+                                        <small class="mt-0"><a class="text-decoration-none" href="/@user.Username">&#64;@user.Username</a></small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="row mt-3">
+                                        <p class="mb-0">Joined: @user.JoinDate.ToLongDateString()</p>
+                                        <p class="mt-0">@user.LikeCount Likes / @user.FollowerCount Followers / @user.ChirpCount Chirps</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+        else
+        {
+            <div class="row">
+                <h4>No users found.</h4>
+            </div>
+        }
+
+        <partial name="_PageTopButton" />
+    </div>
+}

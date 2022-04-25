@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ChirpDto>
+@{
+    ViewBag.Title = "Tag " + ViewBag.Name;
+}
+
+<partial name="_PageTitle" />
+
+@if (ViewBag.ChirpCount > 0)
+{
+    @foreach (ChirpDto chirp in Model)
+    {
+        <div class="card mt-3 border-dark">
+            <div class="body text-center my-1">
+                <div class="row">
+                    <div class="col-sm-2 my-auto">
+                        <img src="https://www.gravatar.com/avatar/@chirp.GravatarCode?s=125&d=retro" alt="Gravatar Image" />
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="row mt-3">
+                            <h3 class="card-title mb-0">@chirp.FirstName @chirp.LastName</h3>
+                            <small class="mt-0"><a class="text-decoration-none" href="/@chirp.Username">&#64;@chirp.Username</a></small>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="row mt-3">
+                            <small class="mb-0">@chirp.ChirpTimestamp.ToLongDateString() at @chirp.ChirpTimestamp.ToShortTimeString()</small>
+                            <small class="mt-0">@chirp.ChirpLikes Likes / @chirp.ChirpDislikes Dislikes</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <p class="card-text px-5">
+                        <a class="text-dark text-decoration-none" href="/chirp/@chirp.ChirpId">@chirp.ChirpBody</a>
+                    </p>
+                </div>
+                <div class="row mt-3">
+                    @if (chirp.Tags.Length > 0)
+                    {
+                        <div class="btn-group flex-wrap" data-toggle="buttons">
+                            @foreach (var tag in chirp.Tags)
+                            {
+                                <a class="btn btn-outline-dark mx-1 my-1 rounded" href="/tag/@tag.TagId">@tag.TagName</a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-center">No Tags Found</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row">
+        <h4>No chirps found for this tag.</h4>
+    </div>
+}

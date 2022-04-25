@@ -1,0 +1,128 @@
+﻿@{
+    UserDetailsDto? user = ViewBag.User;
+    ChirpDto[]? chirps = ViewBag.Chirps;
+}
+
+<partial name="_PageTitle" />
+
+@if (!ViewBag.ActiveProfile)
+{
+    <div class="text-center">
+        <h1>This account doesn’t exist.</h1>
+        <h2>Please try searching for a user.</h2>
+    </div>
+}
+
+@if (ViewBag.ActiveProfile)
+{
+    <div class="card col-sm-6 mx-auto border-dark">
+        <div class="body text-center my-1">
+            <div class="row">
+                <div class="col-sm-3 my-auto">
+                    <img src="https://www.gravatar.com/avatar/@user.GravatarCode?s=125&d=retro" alt="Gravatar Image" />
+                </div>
+                <div class="col-sm-9 my-auto">
+                    <div class="row">
+                        <h3 class="card-title mb-0">@user.FirstName @user.LastName</h3>
+                        <small class="mb-0">Joined: @user.JoinDate.ToLongDateString()</small>
+                        <small class="mb-0">@user.ChirpCount Chirps / @user.LikeCount Likes / @user.FollowerCount Followers</small>
+
+                        @if (ViewBag.IsSignedIn)
+                        {
+                            <input id="userId" hidden="hidden" disabled="disabled" value="@ViewBag.UserId" />
+                            @if (!ViewBag.IsFollowing)
+                            {
+                                <a id="btnFollow" class="col-sm-3 mx-auto btn btn-outline-primary btn-sm" style="max-width: 200px;" onclick="follow()">Follow Me</a>
+                            }
+
+                            @if (ViewBag.IsFollowing)
+                            {
+                                <a id="btnUnfollow" class="col-sm-3 mx-auto btn btn-outline-primary btn-sm" style="max-width: 200px;" onclick="follow()">Unfollow Me</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    if (ViewBag.Chirps != null)
+    {
+        @foreach (ChirpDto chirp in chirps)
+        {
+            <div class="card mt-3 border-dark">
+                <div class="body text-center my-1">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row mt-3">
+                                <small class="mb-0">@chirp.ChirpTimestamp.ToLongDateString() at @chirp.ChirpTimestamp.ToShortTimeString()</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row mt-3">
+                                <small class="mt-0">@chirp.ChirpLikes Likes / @chirp.ChirpDislikes Dislikes</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <p class="card-text px-5">
+                            <a class="text-dark text-decoration-none" href="/chirp/@chirp.ChirpId">@chirp.ChirpBody</a>
+                        </p>
+                    </div>
+                    <div class="row mt-3">
+                        @if (chirp.Tags.Length > 0)
+                        {
+                            <div class="btn-group flex-wrap" data-toggle="buttons">
+                                @foreach (var tag in chirp.Tags)
+                                {
+                                    <a class="btn btn-outline-dark mx-1 my-1 rounded" href="/tag/@tag.TagId">@tag.TagName</a>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-center">No Tags Found</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="card mt-3 col-sm-6 border-dark mx-auto">
+            <div class="body my-1">
+                <div class="row">
+                    <p class="card-text text-center px-5">
+                        No Chirps Found.
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+<script type="text/javascript">
+    function follow() {
+        var data = {
+            id: document.getElementById("userId").value
+        };
+        let _url = "/Follow/" + data.id + "/";
+        $.ajax({
+            type: 'POST',
+            url: _url,
+            contentType: 'application/x-www-form-urlencoded',
+            data: data,
+            dataType: 'json',
+            success: function (result) {
+                alert(result.message);
+                location.reload();
+            },
+            error: function () {
+                alert("Something went wrong. Please try again later.");
+            }
+        })
+    }
+</script>
+}
