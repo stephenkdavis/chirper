@@ -1,5 +1,10 @@
 # The Chirper App
 
+## Stephen K. Davis
+| Email | Website | Twitter | LinkedIn | GitHub |
+|-------|---------|---------|----------|--------|
+| [stephenkdavis@outlook.com](mailto:stephenkdavis@outlook.com) | [stephendavis.io](https://stephendavis.io/) | [StephenDavisIO](https://twitter.com/StephenDavisIO) | [StephenKyleDavis](https://www.linkedin.com/in/stephenkyledavis/) | [stephenkdavis](https://github.com/stephenkdavis) |
+
 ## About This Project
 This is a small project that mimics the functionality of Twitter. It has the following functionality:
 - Explore chirps, tags and user profiles as a guest
